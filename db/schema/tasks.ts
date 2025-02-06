@@ -11,7 +11,12 @@ export const taskStatusEnum = pgEnum(
   taskStatus
 )
 
-export const priorityType = ['']
+export const priorityStatus = ['low','medium','high'] as const
+export type priorityType = (typeof priorityStatus)[number]
+export const priorityEnum = pgEnum(
+  'priority_status',
+  priorityStatus
+)
 
 export const tasks = pgTable("tasks", {
     id: serial("id").primaryKey(),
@@ -20,7 +25,7 @@ export const tasks = pgTable("tasks", {
     title: text("title").notNull(),
     description: text("description"),
     status: taskStatusEnum().default('pending'), 
-    priority: text("priority").default("medium"), // low, medium, high
+    priority: priorityEnum().default("medium"), // low, medium, high
     dueDate: timestamp("due_date"),
     createdAt,
     updatedAt

@@ -3,7 +3,7 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 224 50% 98%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -30,7 +30,7 @@
     --radius: 0.5rem
   }
   .dark {
-    --background: 224 71.4% 4.1%;
+    --background: 224 71.4% 0%;
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
     --card-foreground: 210 20% 98%;
@@ -63,4 +63,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.no-scrollbar::-webkit-scrollbar{
+  display:  none;
 }

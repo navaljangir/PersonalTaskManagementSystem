@@ -58,9 +58,11 @@ export const authOptions: NextAuthOptions = {
             if (session && session?.user) {
                 session.user.id = token.sub || '';
             }
-            console.log('session', session)
             return session
         }
     },
-    adapter
+    adapter,
+    pages : {
+        signIn : '/signin'
+    }
 }
