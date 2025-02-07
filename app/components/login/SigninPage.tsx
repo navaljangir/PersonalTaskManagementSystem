@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 
 interface SigninType {
@@ -23,15 +24,23 @@ export function SigninPage() {
     });
 
     const onSubmit = async (values: SigninType) => {
-        console.log(values)
+        const signInToast = toast.loading('Signing In')
         const res = await signIn('credentials', {
             email: values.email,
             password: values.password,
             redirect: false
         })
         if (res?.ok) {
+            toast.success('Signed In', {
+                duration : 2000,
+                id : signInToast
+            })
             router.push('/dashboard')
         } else {
+            toast.error('Invalid Email/password', {
+                duration : 2000,
+                id : signInToast
+            })
             router.push('/signin')
         }
     }
