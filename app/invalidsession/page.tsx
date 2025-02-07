@@ -2,7 +2,6 @@
 
 import { signOut } from 'next-auth/react';
 import React, { useEffect } from 'react';
-import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 
 export default function InvalidSession(){
@@ -23,7 +22,6 @@ export default function InvalidSession(){
 
   return (
     <div>
-      <Toaster />
     </div>
   );
 };

@@ -28,6 +28,7 @@ export function MyCalendar({ projects }: { projects: projectType[] }) {
             title: task.title,
             start: parseISO(task.dueDate!.toISOString()),
             end: parseISO(task.dueDate!.toISOString()),
+            fullDay : true,
             resource: {
                 status: task.status,
                 priority: task.priority
@@ -35,22 +36,21 @@ export function MyCalendar({ projects }: { projects: projectType[] }) {
         }))
 
     return (
-        <div className="bg-white rounded-xl p-6 shadow-sm ">
+        <div className="bg-white text-black rounded-xl p-6 shadow-sm ">
             <h2 className="text-lg font-semibold mb-4">Calendar View</h2>
             <div className="h-[1000px] w-full mb-6">
                 <Calendar
                     localizer={localizer}
                     events={calendarEvents}
-                    defaultView={"month"}
                     startAccessor="start"
                     endAccessor="end"
-                    style={{ height: '100%', width: '100%' }}
+                    style={{ height: '100%' }}
                     components={{
                         event: ({ event }) => (
-                            <div className="text-sm">
+                            <div className="p-1 text-sm">
                                 <div className={`${event.resource.priority === 'high' ? 'border-red-200 bg-red-50' :
                                     event.resource.priority === 'medium' ? 'border-yellow-200 bg-yellow-50' :
-                                        'border-green-200 bg-green-50'} pb-1 rounded border-l-4`}>
+                                        'border-green-200 bg-green-50'} p-2 rounded border-l-4`}>
                                     {event.title}
                                     <div className="text-xs mt-1">
                                         <span className={`px-2 py-1 rounded-full ${event.resource.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -61,7 +61,7 @@ export function MyCalendar({ projects }: { projects: projectType[] }) {
                                     </div>
                                 </div>
                             </div>
-                        ) 
+                        )
                     }}
                 />
             </div>
