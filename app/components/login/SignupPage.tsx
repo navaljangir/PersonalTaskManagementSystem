@@ -25,6 +25,7 @@ export function SignupPage() {
     });
 
     const onSubmit = async (values: SignUpType) => {
+        const signinUp = toast.loading('Signing Up...')
         const res = await SignUpCall({
             username: values.username,
             name: values.name,
@@ -33,12 +34,14 @@ export function SignupPage() {
         })
         if (res.success) {
             toast.success(res.message, {
-                duration: 2000
+                duration: 2000,
+                id : signinUp
             })
             router.push('/signin')
         } else {
             toast.error(res.message, {
-                duration: 2000
+                duration: 2000,
+                id : signinUp
             })
         }
         console.log(values)

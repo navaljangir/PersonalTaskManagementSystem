@@ -1,3 +1,4 @@
+CREATE TYPE "public"."priority_status" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TYPE "public"."task_status" AS ENUM('pending', 'progress', 'completed');--> statement-breakpoint
 CREATE TABLE "account" (
 	"userId" text NOT NULL,
@@ -34,10 +35,12 @@ CREATE TABLE "session" (
 CREATE TABLE "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text,
+	"username" text,
 	"email" text,
 	"emailVerified" timestamp,
 	"image" text,
 	"password" text,
+	"token" text,
 	"created_at" timestamp DEFAULT now(),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
@@ -55,7 +58,7 @@ CREATE TABLE "tasks" (
 	"title" text NOT NULL,
 	"description" text,
 	"status" "task_status" DEFAULT 'pending',
-	"priority" text DEFAULT 'medium',
+	"priority" "priority_status" DEFAULT 'low',
 	"due_date" timestamp,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()

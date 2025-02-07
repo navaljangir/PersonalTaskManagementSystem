@@ -25,7 +25,7 @@ export const tasks = pgTable("tasks", {
     title: text("title").notNull(),
     description: text("description"),
     status: taskStatusEnum().default('pending'), 
-    priority: priorityEnum().default("medium"), // low, medium, high
+    priority: priorityEnum().default("low"), // low, medium, high
     dueDate: timestamp("due_date"),
     createdAt,
     updatedAt

@@ -24,7 +24,7 @@ const sideBarContent = [
 
 export default function SideBaritems({isSideBarOpen} : {isSideBarOpen : boolean}) {
     const pathname = usePathname()
-    return <div className="h-full lg:sticky top-0 pt-8">
+    return <div className="h-full lg:sticky pt-8">
         <div className="flex flex-col space-y-8 px-4">
             {sideBarContent.map(({ name, link, icon }, index) => {
                 return <Link className={cn("flex bg-transparent items-center text-base justify-start p-2 gap-2 rounded-md",
@@ -37,7 +37,7 @@ export default function SideBaritems({isSideBarOpen} : {isSideBarOpen : boolean}
                     {icon}{isSideBarOpen && name}
                 </Link>
             })}
-            
         </div>
+
     </div>
 }

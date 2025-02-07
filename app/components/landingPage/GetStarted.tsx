@@ -15,7 +15,7 @@ export function GetStartedButton(){
         }
     }
     return (
-        <Button className="w-64 text-xl py-4" onClick={handleOnClick}>
+        <Button className="w-52 text-xl py-5 rounded-xl" onClick={handleOnClick}>
             Get Started
         </Button>
     )

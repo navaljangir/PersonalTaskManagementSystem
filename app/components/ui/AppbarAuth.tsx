@@ -25,7 +25,7 @@ export function AuthBar(){
                 }}>
                     Signup
                 </Button>
-            </div> : <Button onClick={()=> signOut()}>
+            </div> : <Button onClick={()=> signOut({callbackUrl : '/signin'})}>
                     Logout
                     </Button>}
     </div>

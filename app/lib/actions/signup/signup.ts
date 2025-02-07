@@ -43,6 +43,7 @@ export default async function SignUpCall({username , name, email , password } : 
         const genSalt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password , genSalt); 
         const userCreated = await db.insert(users).values({
+                username : username,
                 email : email ,
                 name : name ,
                 password : hashedPassword,

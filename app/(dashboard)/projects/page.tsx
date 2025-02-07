@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function ProjectsPage() {
     const session =await getServerSession(authOptions)
-    const userId =session?.user.id
+    const userId =session?.user?.id
     if (!userId) return redirect("/signin");
   return (
     <div className="p-6 max-w-6xl mx-auto">

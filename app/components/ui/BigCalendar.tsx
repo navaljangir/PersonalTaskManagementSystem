@@ -41,7 +41,7 @@ export function MyCalendar({ projects }: { projects: projectType[] }) {
                 <Calendar
                     localizer={localizer}
                     events={calendarEvents}
-                    defaultView={"agenda"}
+                    defaultView={"month"}
                     startAccessor="start"
                     endAccessor="end"
                     style={{ height: '100%', width: '100%' }}

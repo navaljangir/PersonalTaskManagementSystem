@@ -17,7 +17,6 @@ export function ProjectCard() {
     queryKey : ['getAllProjects' , userId],
     queryFn : async()=> {
       if(userId){
-        console.log('called')
        const res =await getProjects(userId)
        return res
       }
@@ -27,8 +26,8 @@ export function ProjectCard() {
   if(isLoading){
     return <div className="w-full flex justify-center">Loading...</div>
   }
-  if(!allProjects){
-    return <div className="w-full flex justify-center">No result</div>
+  if (!allProjects || allProjects.length === 0) {
+    return <div className="w-full flex justify-center">No Results found...</div>;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,7 +42,6 @@ export function ProjectCard() {
               <DeleteProject projectId={project.id} />
               <CreateTask projectId={project.id} />
             </div>
-
           </div>
           <div className="flex flex-col">
             <p className="text-sm text-muted-foreground truncate w-full">

@@ -1,5 +1,5 @@
 {
-  "id": "3fd30611-7e15-43b9-bab3-e622ae6dd903",
+  "id": "2328d345-1252-4245-8b96-33d0447174d7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -241,6 +241,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "email": {
           "name": "email",
           "type": "text",
@@ -261,6 +267,12 @@
         },
         "password": {
           "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token": {
+          "name": "token",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -364,10 +376,11 @@
         },
         "priority": {
           "name": "priority",
-          "type": "text",
+          "type": "priority_status",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
-          "default": "'medium'"
+          "default": "'low'"
         },
         "due_date": {
           "name": "due_date",
@@ -563,6 +576,15 @@
     }
   },
   "enums": {
+    "public.priority_status": {
+      "name": "priority_status",
+      "schema": "public",
+      "values": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
     "public.task_status": {
       "name": "task_status",
       "schema": "public",
