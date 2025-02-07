@@ -6,30 +6,36 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState } from "react";
 import axios from 'axios'
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function DeleteProject({ projectId }: { projectId: number }) {
     const [open, setOpen] = useState(false);
-    const router= useRouter()
-    const handleDelete = async () => {
-        console.log('printing projectid', projectId)
-        try{
-            const res = await axios.post('http://localhost:3000/api/deleteProject', {
+    const queryClient = useQueryClient()
+    const {mutateAsync : handleDelete , isPending} = useMutation({
+        mutationFn : async()=>{
+            console.log('printing projectid', projectId)
+            const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/deleteProject`, {
                 projectId : projectId
             })
-            toast.success(res.data.message , {
-                duration : 2000    
-            })
-            setOpen(false);
-            router.refresh()
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        }catch(e){
-            toast.error('Cannot delete this at the moment' , {
-                duration : 2000
-            })
+            console.log(data)
+            if(data.success){
+                toast.success(data.message , {
+                    duration : 2000
+                })
+                console.log('closing')
+                setOpen(false)
+                return true
+            }else{
+                toast.error(data.message , {
+                    duration : 2000
+                })
+                return false
+            }
+        }, 
+        onSuccess : ()=>{
+            queryClient.invalidateQueries({queryKey : ['getAllProjects']})
         }
-    };
-
+    })
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <Button variant="destructive" size="sm" onClick={() => setOpen(true)}>
@@ -45,7 +51,7 @@ export function DeleteProject({ projectId }: { projectId: number }) {
                         <Button variant="outline" onClick={() => setOpen(false)}>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
+                        <Button variant="destructive" onClick={()=>handleDelete()} disabled={isPending}>
                             Delete
                         </Button>
                     </div>

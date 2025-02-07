@@ -18,7 +18,7 @@ export default async function SignUpCall({username , name, email , password } : 
         console.log(zodValidation.error.issues);
         return {
             success : false, 
-            Message : zodMessage
+            message : zodMessage
         }
     }
     try{
@@ -62,7 +62,7 @@ export default async function SignUpCall({username , name, email , password } : 
     }catch(_e){
         return {
             success : false , 
-            Message : 'Error While Creating a account'
+            message : 'Error While Creating a account'
         }
     }
 }

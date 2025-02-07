@@ -12,35 +12,47 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/app/lib/actions/project/createProject";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function CreateProject() {
   const session = useSession()
   const userId = session?.data?.user.id || ''
-  const projectCreate = async(initialState: boolean | null, formData : FormData)=>{
-    const projectTitle = formData.get('projectname') as string
-    const projectDescription = formData.get('description') as string
-    const res = await createProject(userId , projectTitle , projectDescription)
-    if(res.success){
-      toast.success(res.message , {
-        duration : 2000
-      })
-    }else{
-      toast.error('Project cannot be Cannot' , {
-        duration : 2000
-      })
+  const queryClient = useQueryClient();
+  //Querying for the project addition
+  const { mutateAsync: addProject } = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const projectTitle = formData.get('projectname') as string
+      const projectDescription = formData.get('description') as string
+      const res = await createProject(userId, projectTitle, projectDescription)
+      return res
+      //Invalidating the process
+    },onSuccess : ()=> {
+      queryClient.invalidateQueries({queryKey : ['getAllProjects']})
     }
-    return true
+  })
+  const projectCreate = async (initialState: boolean | null, formData: FormData) => {
+    const res = await addProject(formData)
+    if (res.success) {
+      toast.success(res.message, {
+        duration: 2000
+      })
+      setCreateProjectOpen(false)
+      return true
+    } else {
+      toast.error(res.message, {
+        duration: 2000
+      })
+      return false
+    }
   }
-  const [state,formAction, isPending] = useActionState(projectCreate, null);
-
+  const [state, formAction, isPending] = useActionState(projectCreate, null);
+  const [createProjectOpen , setCreateProjectOpen] = useState(false)
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>New Project</Button>
-      </DialogTrigger>
+    <Dialog open={createProjectOpen} onOpenChange={setCreateProjectOpen}>
+        <Button onClick={()=> setCreateProjectOpen(true)}>New Project</Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>

@@ -1,9 +1,11 @@
+'use calendar'
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getProjects } from "../lib/actions/project/getProjects";
 import { authOptions } from "../lib/NextAuthOptions";
 import { SortTasks } from "../lib/getSortedTasks";
+import { MyCalendar } from "./ui/BigCalendar";
 
 export async function DashboardPage() {
     const session = await getServerSession(authOptions)
@@ -13,14 +15,17 @@ export async function DashboardPage() {
     const sortedTasks = SortTasks(projects.flatMap(p => p.tasks).slice(0, 9) , "asc")
     return (
         <div className="p-6 min-h-screen w-full mx-auto">
-            <div className="">
+            <div className="flex flex-col">
+             <div className="w-full h-full">
+                    <MyCalendar projects={projects}/>
+                </div>
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold">Project Dashboard</h1>
                     <Link href="/projects" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                         + New Task
                     </Link>
                 </div>
-
+                {/* Recent projects secions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projects.map((project) => (
                         <div key={project.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -30,7 +35,6 @@ export async function DashboardPage() {
                                     <p className="text-sm text-gray-500 mt-1">{project.description}</p>
                                 )}
                             </div>
-
                             <div className="space-y-3">
                                 {project.tasks.map((task) => (
                                     <div key={task.id} className="group flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -77,6 +81,9 @@ export async function DashboardPage() {
                         ))}
                     </div>
                 </div>
+
+               
+
             </div>
         </div>
     );

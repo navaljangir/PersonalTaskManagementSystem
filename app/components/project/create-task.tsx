@@ -24,38 +24,55 @@ import { useFormState } from "react-dom";
 import { useActionState, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function CreateTask({ projectId }: { projectId?: number }) {
   const session = useSession();
+  const queryClient = useQueryClient()
   const userId = session.data?.user.id
-  const [date,setDate] = useState<Date | undefined>(new Date())
-  const storeTask = async(state : boolean | null , formAction : FormData)=>{
-    if(!date){
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const { mutateAsync: addTask } = useMutation({
+    mutationFn: async (formAction: FormData) => {
+      return await createTask(userId!, projectId!, formAction, date)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAllProjects'] })
+    }
+  })
+
+  const storeTask = async (state: boolean | null, formAction: FormData) => {
+    if (!date) {
       toast.error('Select a date', {
-        duration : 2000
+        duration: 2000
       })
       return false
     }
-    if(projectId){
-      await createTask(userId!, projectId , formAction, date)
+    const res = await addTask(formAction)
+    if (res.success) {
+      toast.success(res.message, {
+        duration: 2000
+      })
+      setCreateTaskOpen(false)
       return true
+    } else {
+      toast.error(res.message, {
+        duration: 2000
+      })
+      return false
     }
-    return false
   }
   const [state, formAction] = useActionState(storeTask, null);
-
+  const [createTaskOpen, setCreateTaskOpen] = useState(false)
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button size="sm">Add Task</Button>
-      </DialogTrigger>
+    <Dialog open={createTaskOpen} onOpenChange={setCreateTaskOpen}>
+      <Button size="sm" onClick={() => setCreateTaskOpen(true)}>Add Task</Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Task</DialogTitle>
         </DialogHeader>
         <form action={formAction} className="space-y-4">
           <input type="hidden" name="projectId" value={projectId} />
-          
+
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
@@ -65,7 +82,7 @@ export function CreateTask({ projectId }: { projectId?: number }) {
               placeholder="Task title"
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -74,7 +91,7 @@ export function CreateTask({ projectId }: { projectId?: number }) {
               placeholder="Task details..."
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Status</Label>
@@ -89,7 +106,7 @@ export function CreateTask({ projectId }: { projectId?: number }) {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <Label>Priority</Label>
               <Select name="priority" defaultValue="medium">
@@ -104,7 +121,7 @@ export function CreateTask({ projectId }: { projectId?: number }) {
               </Select>
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label>Due Date: </Label>
             <span>{date?.toISOString().split('T')[0]}</span>
@@ -113,13 +130,13 @@ export function CreateTask({ projectId }: { projectId?: number }) {
               selected={date}
               onSelect={setDate}
               className="rounded-md border"
-              disabled={(date)=>{
+              disabled={(date) => {
                 const currDate = new Date()
-                return date<currDate
+                return date < currDate
               }}
             />
           </div>
-          
+
           <Button type="submit">Create Task</Button>
         </form>
       </DialogContent>

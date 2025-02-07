@@ -2,7 +2,7 @@
 
 import { db } from "@/db/db"
 import { priorityType, tasks, taskStatusType } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 
 export async function updateTask(taskId: number, formData: FormData, date: Date | undefined) {
@@ -17,9 +17,10 @@ export async function updateTask(taskId: number, formData: FormData, date: Date 
             description,
             status,
             priority,
-            dueDate
+            dueDate,
+            updatedAt : sql`NOW()`
         }).where(eq(tasks.id , taskId))
-        revalidatePath('/projects')
+        revalidatePath('/dashboard')
         return {
             success : true,
             message :'Updated Successfully'

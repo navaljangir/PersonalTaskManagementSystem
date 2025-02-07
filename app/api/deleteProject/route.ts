@@ -9,10 +9,14 @@ export async function POST(req: NextRequest) {
         await db.delete(projects).where(eq(projects.id, projectId)).returning({
             id: projects.id
         })
-        return NextResponse.json({ message: 'Delete Successfully' })
+        return NextResponse.json({
+            success: true,
+            message: 'Delete Successfully'
+        })
     } catch (e) {
         console.log('Error while Deleting Projects', e)
         NextResponse.json({
+            success: false,
             message: 'Cannot Delete'
         })
     }

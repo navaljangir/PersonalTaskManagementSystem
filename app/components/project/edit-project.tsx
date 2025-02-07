@@ -11,15 +11,24 @@ import { updateProject } from "@/app/lib/actions/project/updateProject";
 import { useActionState, useState } from "react";
 import { projectType } from "@/lib/types";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function EditProject({ project }: { project: projectType }) {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient()
+  const { mutateAsync: editProject } = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const projectTitle = formData.get('projectname') as string
+      const projectDescription = formData.get('description') as string
+      const res = await updateProject(project.id, projectTitle, projectDescription)
+      return res
+      //Invalidating the process
+    },onSuccess : ()=> {
+      queryClient.invalidateQueries({queryKey : ['getAllProjects']})
+    }
+  })
   const projectUpdate = async (_ : boolean | null, formData: FormData) => {
-    const res=  await updateProject(
-      project.id,
-      formData.get("projectname") as string,
-      formData.get("description") as string
-    );
+    const res=  await editProject(formData)
     if(res.success){
         toast.success(res.message , {
             duration : 2000

@@ -19,24 +19,35 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function EditTask({ task }: { task: taskType }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(task.dueDate || undefined);
-
+  const queryClient = useQueryClient()
+  const { mutateAsync: editTask } = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const res = await updateTask(task.id, formData, date);
+      return res
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAllProjects'] })
+    }
+  })
   const taskUpdate = async (_: boolean | null, formData: FormData) => {
-    const res = await updateTask(task.id, formData, date);
+    const res = await editTask(formData)
     if (res.success) {
       toast.success(res.message, {
         duration: 2000
       })
+      setOpen(false);
+      return true
     } else {
       toast.error(res.message, {
         duration: 2000
       })
+      return false
     }
-    setOpen(false);
-    return null;
   };
 
   const [state, formAction, isPending] = useActionState(taskUpdate, null);
@@ -111,6 +122,10 @@ export function EditTask({ task }: { task: taskType }) {
               selected={date}
               onSelect={setDate}
               className="rounded-md border"
+              disabled={(date) => {
+                const currDate = new Date()
+                return date < currDate
+              }}
             />
           </div>
 

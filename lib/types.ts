@@ -18,6 +18,7 @@ export interface projectType{
     description: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
+    tasks :  taskType[]
 }
 
 

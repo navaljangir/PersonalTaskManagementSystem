@@ -12,7 +12,7 @@ export async function updateProject(id : number, projectName: string, projectDes
             description : projectDescription,
             updatedAt : sql`Now()`
         }).where(eq(projects.id , id))
-        revalidatePath('/projects')
+        revalidatePath('/dashboard')
         return {
             success: true,
             message : 'Updated Successfully'
