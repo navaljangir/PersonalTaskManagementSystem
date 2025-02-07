@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres_db:
+    image: 'postgres'
+    container_name: 'personaltaskdb'
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DB_SECRET_PASSWORD}
+      - POSTGRES_USERNAME=${DB_USERNAME}
+      - POSTGRES_DB=${DB_DBNAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data
