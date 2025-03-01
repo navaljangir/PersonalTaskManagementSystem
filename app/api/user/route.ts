@@ -6,7 +6,6 @@ import { users } from '@/db/schema';
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const token = url.searchParams.get('token');
-  console.log('token from the exists' , token)
   if (!token) {
     return NextResponse.redirect(new URL('/invalidsession', req.url));
   }

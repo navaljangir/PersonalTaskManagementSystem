@@ -7,7 +7,7 @@ export function Sidebar() {
     const [isSideBarOpen, setSideBarOpen] = useState(true)
     
     return <div className="h-full pt-5 border-r overflow-hidden">
-        <div className="h-full hidden lg:block">
+        <div className="h-full hidden md:block">
         <div className="flex items-center gap-2 pb-2 border-b w-full pl-6">
             <button onClick={()=> setSideBarOpen((isSideBarOpen)=> !isSideBarOpen)}>
                {isSideBarOpen ? <PanelRightOpen size={30}/> : <PanelLeftOpen size={30}/>}
